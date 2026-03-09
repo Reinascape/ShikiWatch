@@ -136,15 +136,15 @@ class SettingsPage extends ConsumerWidget {
                 <Widget>[
                   if (SecureStorageService.instance.token != '' && userLogin)
                     const UserAccountGroup(),
-                  SettingsGroup(
+                  const SettingsGroup(
                     title: 'Внешний вид',
                     options: [
-                      const CurrentThemeOption(),
-                      const SchemeVariantOption(),
-                      const DynamicColorsOption(),
-                      const OledModeOption(),
-                      if (!AppUtils.instance.isDesktop)
-                        const NavDestLabelBehaviorOption(),
+                      CurrentThemeOption(),
+                      SchemeVariantOption(),
+                      DynamicColorsOption(),
+                      OledModeOption(),
+                      // if (!AppUtils.instance.isDesktop)
+                      NavDestLabelBehaviorOption(),
                     ],
                   ),
                   SettingsGroup(

@@ -99,6 +99,11 @@ class AnilibSourcePage extends ConsumerWidget {
                         );
                       },
                     ),
+                    SliverPadding(
+                      padding: EdgeInsets.only(
+                        bottom: context.padding.bottom,
+                      ),
+                    ),
                   ];
                 },
                 loading: () => [

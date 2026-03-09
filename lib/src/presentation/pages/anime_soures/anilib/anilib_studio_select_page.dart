@@ -120,6 +120,11 @@ class AnilibStudioSelectPage extends ConsumerWidget {
                         );
                       },
                     ),
+                    SliverPadding(
+                      padding: EdgeInsets.only(
+                        bottom: context.padding.bottom,
+                      ),
+                    ),
                   ];
                 },
                 loading: () => [

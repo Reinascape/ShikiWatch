@@ -14,11 +14,12 @@ import '../../../../secret.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/extensions/buildcontext.dart';
 import '../../../utils/router.dart';
+
 import 'disclaimer_dialog.dart';
-import 'feature_tile.dart';
+// import 'feature_tile.dart';
 
 const _authUrl =
-    'https://shikimori.one/oauth/authorize?client_id=$kShikiClientIdDesktop&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&response_type=code&scope=user_rates';
+    'https://shikimori.io/oauth/authorize?client_id=$kShikiClientIdDesktop&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&response_type=code&scope=user_rates';
 
 Future<void> _launchUrl() async {
   if (Platform.isLinux) {

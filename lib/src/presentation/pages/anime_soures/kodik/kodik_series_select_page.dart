@@ -383,7 +383,7 @@ class SeriesSelectPage extends HookConsumerWidget {
               ),
               SliverPadding(
                 padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).padding.bottom,
+                  bottom: context.padding.bottom,
                 ),
               ),
             ],

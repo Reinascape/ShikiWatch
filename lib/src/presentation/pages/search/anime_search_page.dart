@@ -80,6 +80,8 @@ class AnimeSearchPage extends ConsumerWidget {
           ),
         ),
         body: SafeArea(
+          top: false,
+          bottom: false,
           child: Builder(
             builder: (context) {
               if (controller.textEditingController.text.isEmpty &&
@@ -166,7 +168,11 @@ class AnimeSearchPage extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 70)),
+                  SliverPadding(
+                    padding: EdgeInsets.only(
+                      bottom: context.padding.bottom,
+                    ),
+                  ),
                 ],
               );
             },

@@ -8,6 +8,89 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../utils/extensions/buildcontext.dart';
 import '../../utils/app_utils.dart';
 
+class DonateWidgetNew extends StatelessWidget {
+  const DonateWidgetNew({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            context.colorScheme.tertiaryContainer,
+            context.colorScheme.secondaryContainer,
+          ],
+        ),
+        borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Поддержать разработку',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.w600,
+                color: context.colorScheme.onTertiaryContainer,
+                letterSpacing: 1.2,
+              ),
+            ),
+            Text(
+              'Понравилось приложение?\nТы можешь сделать добровольное пожертвование, чем очень поможешь в разработке.',
+              style: TextStyle(
+                fontSize: 14.0,
+                color: context.colorScheme.onTertiaryContainer.withOpacity(0.8),
+              ),
+            ),
+            const SizedBox(height: 4.0),
+            Divider(
+              color: context.colorScheme.onTertiaryContainer,
+            ),
+            // const SizedBox(height: 4.0),
+            Material(
+              type: MaterialType.transparency,
+              child: InkWell(
+                onTap: () => launchUrlString(
+                  'https://boosty.to/wheremyfiji/donate',
+                  mode: LaunchMode.externalApplication,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/svg/boosty.svg',
+                        height: 24,
+                        colorFilter: ColorFilter.mode(
+                          context.colorScheme.tertiary,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      const SizedBox(width: 8.0),
+                      Text(
+                        'Boosty',
+                        style: context.textTheme.titleMedium?.copyWith(
+                          color: context.colorScheme.onTertiaryContainer,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class DonateWidget extends StatelessWidget {
   const DonateWidget({super.key});
 

@@ -51,7 +51,7 @@ class OtherMorePage extends StatelessWidget {
             ),
             const SliverPadding(
               padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-              sliver: SliverToBoxAdapter(child: DonateWidget()),
+              sliver: SliverToBoxAdapter(child: DonateWidgetNew()),
             ),
             SliverPadding(
               padding: EdgeInsets.only(

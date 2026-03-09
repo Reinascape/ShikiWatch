@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../toggles.dart';
 import '../../../services/preferences/preferences_service.dart';
 import '../../../utils/extensions/buildcontext.dart';
 import '../../widgets/custom_flexible_space.dart';
@@ -139,7 +140,8 @@ class AnimeDetailsNewPage extends HookConsumerWidget {
                         ),
                       ),
                     ),
-                    if (title.nextEpisodeAt != null)
+                    if (Toggles.enableTitleNextEp &&
+                        title.nextEpisodeAt != null)
                       SliverPadding(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                         sliver: SliverToBoxAdapter(

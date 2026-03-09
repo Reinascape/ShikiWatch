@@ -160,7 +160,11 @@ class MangaDetailPage extends ConsumerWidget {
                   MangaRelatedWidget(
                     id: data.id!,
                   ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 60)),
+                  SliverPadding(
+                    padding: EdgeInsets.only(
+                      bottom: context.padding.bottom,
+                    ),
+                  ),
                 ],
                 error: (err, stack) => [
                   SliverFillRemaining(

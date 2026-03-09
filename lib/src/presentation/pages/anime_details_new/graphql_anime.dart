@@ -115,7 +115,7 @@ class DetailsNotifier
 
   Future<GraphqlAnime> _fetch() async {
     final Map<String, dynamic> resp = await ref.read(httpServiceProvider).post(
-          'https://shikimori.one/api/graphql',
+          'graphql',
           data: json.encode(
             {
               'query': _animeDetailsQuery,

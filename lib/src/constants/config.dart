@@ -6,8 +6,8 @@ class AppConfig {
   static const int databaseVersion = 1;
   static const String databaseVersionKey = "isarVersionKey";
 
-  static const String baseUrl = 'https://shikimori.one/api/';
-  static const String staticUrl = 'https://shikimori.one';
+  static const String baseUrl = 'https://shikimori.io/api/';
+  static const String staticUrl = 'https://shikimori.io';
 }
 
 String get kAppArch {

@@ -41,7 +41,7 @@ class InfoLinks extends StatelessWidget {
           ),
           ListTile(
             onTap: () => launchUrlString(
-              'https://shikimori.one',
+              'https://shikimori.io',
               mode: LaunchMode.externalApplication,
             ),
             leading: SvgPicture.asset(

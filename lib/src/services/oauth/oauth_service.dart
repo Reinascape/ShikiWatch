@@ -19,7 +19,7 @@ class OAuthService {
 
   Future<bool> getToken(String authCode) async {
     http.Response tokenRequestResponse = await http.post(
-      getUrl(Uri.parse('https://shikimori.one'), '/oauth/token', {
+      getUrl(Uri.parse('https://shikimori.io'), '/oauth/token', {
         'grant_type': 'authorization_code',
         'client_id': AppUtils.instance.isDesktop
             ? kShikiClientIdDesktop
@@ -60,7 +60,7 @@ class OAuthService {
   Future<String?> refreshToken() async {
     http.Response tokenRefreshResponse = await http.post(
       getUrl(
-        Uri.parse('https://shikimori.one'),
+        Uri.parse('https://shikimori.io'),
         '/oauth/token',
         {
           'grant_type': 'refresh_token',
@@ -93,7 +93,7 @@ class OAuthService {
   }
 
   Future<bool> getUserInfo(String token) async {
-    final Uri userUrl = Uri.https('shikimori.one', 'api/users/whoami');
+    final Uri userUrl = Uri.https('shikimori.io', 'api/users/whoami');
 
     final Map<String, String> headers = {
       'User-Agent': AppUtils.instance.isDesktop

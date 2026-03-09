@@ -9,7 +9,7 @@ import '../../../widgets/custom_radius_animator.dart';
 import '../graphql_character.dart';
 
 const String shikiMissingImage =
-    'https://shikimori.one/assets/globals/missing/main.png';
+    'https://shikimori.io/assets/globals/missing/main.png';
 
 class TitleCharacters extends StatelessWidget {
   const TitleCharacters(this.characterRoles, {super.key});

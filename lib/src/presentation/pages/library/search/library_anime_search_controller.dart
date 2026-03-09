@@ -94,7 +94,7 @@ class LibraryAnimeSearchNotifier extends ChangeNotifier {
 
     result = await AsyncValue.guard(() async {
       final resp = await ref.read(httpServiceProvider).post(
-            'https://shikimori.one/api/graphql',
+            'graphql',
             data: json.encode({
               'query': _searchQuery,
               'variables': {

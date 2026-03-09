@@ -62,8 +62,8 @@ class DioHttpService implements HttpService {
   BaseOptions get baseOptions => BaseOptions(
         baseUrl: baseUrl,
         headers: headers,
-        connectTimeout: const Duration(seconds: 12),
-        receiveTimeout: const Duration(seconds: 30),
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
         //contentType: 'application/json; charset=utf-8',
         responseType: ResponseType.json,
         followRedirects: false,
