@@ -100,19 +100,24 @@ class AnimeFranchisePage extends ConsumerWidget {
                   );
                 }
 
-                return SliverList.builder(
-                  itemBuilder: (context, index) {
-                    final item = franchiseItems[index];
+                return SliverPadding(
+                  padding: EdgeInsets.only(
+                    bottom: context.padding.bottom,
+                  ),
+                  sliver: SliverList.builder(
+                    itemBuilder: (context, index) {
+                      final item = franchiseItems[index];
 
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                      child: FranchiseListItem(
-                        item,
-                        currentId: data.currentId ?? id,
-                      ),
-                    );
-                  },
-                  itemCount: franchiseItems.length,
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                        child: FranchiseListItem(
+                          item,
+                          currentId: data.currentId ?? id,
+                        ),
+                      );
+                    },
+                    itemCount: franchiseItems.length,
+                  ),
                 );
               },
               error: (e, _) => SliverFillRemaining(

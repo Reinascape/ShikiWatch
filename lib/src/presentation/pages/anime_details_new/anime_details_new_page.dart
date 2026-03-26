@@ -68,6 +68,8 @@ class AnimeDetailsNewPage extends HookConsumerWidget {
       [size.height, useRowLayout],
     );
 
+    ref.listen(relatedUserRateStatusProvider(id), (_, __) {});
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () => ref.read(animeDetailsProvider(id).notifier).refresh(),
@@ -148,7 +150,9 @@ class AnimeDetailsNewPage extends HookConsumerWidget {
                           child: TitleNextEpisode(
                             episodesAired: title.episodesAired,
                             nextEpisodeAt: title.nextEpisodeAt!,
-                          ).animate().fade(),
+                          )
+                              .animate()
+                              .fade(delay: const Duration(milliseconds: 50)),
                         ),
                       ),
                     SliverPadding(
@@ -195,7 +199,9 @@ class AnimeDetailsNewPage extends HookConsumerWidget {
                             ].contains(title.kind))
                               PlayButton(title),
                           ],
-                        ).animate().fade(),
+                        )
+                            .animate()
+                            .fade(delay: const Duration(milliseconds: 50)),
                       ),
                     ),
                     if (title.descriptionLength > 0)
@@ -206,21 +212,25 @@ class AnimeDetailsNewPage extends HookConsumerWidget {
                             title.description,
                             shouldExpand: !AppUtils.instance.isDesktop &&
                                 title.descriptionLength > 600,
-                          ).animate().fade(),
+                          )
+                              .animate()
+                              .fade(delay: const Duration(milliseconds: 100)),
                         ),
                       ),
                     if (title.genres.isNotEmpty)
                       SliverPadding(
                         padding: const EdgeInsets.fromLTRB(0, 14, 0, 10),
                         sliver: SliverToBoxAdapter(
-                          child: TitleGenres(title.genres).animate().fade(),
+                          child: TitleGenres(title.genres)
+                              .animate()
+                              .fade(delay: const Duration(milliseconds: 100)),
                         ),
                       ),
                     if (title.statusesStats.isNotEmpty)
                       SliverToBoxAdapter(
                         child: TitleStatusesStats(title.statusesStats)
                             .animate()
-                            .fade(),
+                            .fade(delay: const Duration(milliseconds: 100)),
                       ),
                     if (title.characterRoles.isNotEmpty)
                       TitleCharacters(title.characterRoles),

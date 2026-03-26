@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class SeekIndicator extends StatelessWidget {
@@ -21,6 +23,7 @@ class SeekIndicator extends StatelessWidget {
           style: const TextStyle(
             fontSize: 32,
             color: Colors.white,
+            fontFeatures: [FontFeature.tabularFigures()],
           ),
         ),
         const SizedBox(height: 4),
@@ -29,6 +32,7 @@ class SeekIndicator extends StatelessWidget {
           style: const TextStyle(
             fontSize: 18,
             color: Colors.white70,
+            fontFeatures: [FontFeature.tabularFigures()],
           ),
         ),
       ],

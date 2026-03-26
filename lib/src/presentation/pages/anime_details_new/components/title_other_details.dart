@@ -121,7 +121,10 @@ class TitleOtherDetails extends StatelessWidget {
               _Item(
                 label: 'Другие названия',
                 title: synonyms.join('\n'),
-                copy: true,
+                onTap: () => TitleSynonymsSheet.show(
+                  context,
+                  synonyms: synonyms,
+                ),
               ),
             const Divider(),
           ],
@@ -206,14 +209,34 @@ class _Item extends StatelessWidget {
     required this.label,
     required this.title,
     this.copy = false,
+    // ignore: unused_element
+    this.onTap,
   });
 
   final String label;
   final String title;
   final bool copy;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final action = onTap ??
+        (copy
+            ? () async {
+                await Clipboard.setData(
+                  ClipboardData(text: title),
+                );
+
+                if (context.mounted) {
+                  showSnackBar(
+                    ctx: context,
+                    msg: 'Содержимое "$label" скопировано в буфер обмена',
+                    dur: const Duration(milliseconds: 2500),
+                  );
+                }
+              }
+            : null);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -231,21 +254,7 @@ class _Item extends StatelessWidget {
           ),
           Flexible(
             child: InkWell(
-              onTap: copy
-                  ? () async {
-                      await Clipboard.setData(
-                        ClipboardData(text: title),
-                      );
-
-                      if (context.mounted) {
-                        showSnackBar(
-                          ctx: context,
-                          msg: 'Содержимое "$label" скопировано в буфер обмена',
-                          dur: const Duration(milliseconds: 2500),
-                        );
-                      }
-                    }
-                  : null,
+              onTap: action,
               child: Text(
                 title,
                 maxLines: null,
@@ -257,6 +266,71 @@ class _Item extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class TitleSynonymsSheet extends StatelessWidget {
+  const TitleSynonymsSheet(this.synonyms, {super.key});
+
+  final List<String> synonyms;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ...List.generate(
+            synonyms.length,
+            (index) {
+              final synonym = synonyms[index];
+
+              return ListTile(
+                onTap: () async {
+                  await Clipboard.setData(
+                    ClipboardData(text: synonym),
+                  );
+
+                  if (context.mounted) {
+                    showSnackBar(
+                      ctx: context,
+                      msg: 'Скопировано в буфер обмена',
+                      dur: const Duration(milliseconds: 2500),
+                    );
+
+                    Navigator.pop(context);
+                  }
+                },
+                title: Text(synonym),
+                trailing: const Icon(Icons.copy, size: 18),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  static void show(
+    BuildContext context, {
+    required List<String> synonyms,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      useSafeArea: true,
+      showDragHandle: true,
+      isScrollControlled: true,
+      backgroundColor: context.colorScheme.background,
+      elevation: 0,
+      constraints: BoxConstraints(
+        maxWidth:
+            MediaQuery.of(context).size.width >= 700 ? 700 : double.infinity,
+      ),
+      builder: (_) => SafeArea(
+        child: TitleSynonymsSheet(synonyms),
       ),
     );
   }

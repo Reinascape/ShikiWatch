@@ -129,6 +129,7 @@ class _MobilePlayerPageState extends ConsumerState<MobilePlayerPage> {
   }) async {
     try {
       final player = ref.read(playerStateProvider.select((s) => (s.player)));
+      // await player.stream.buffer.first;
       final w = player.state.width ?? 16;
       final h = player.state.height ?? 9;
 

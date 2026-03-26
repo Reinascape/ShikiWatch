@@ -36,12 +36,12 @@ class AnimeSearchPage extends ConsumerWidget {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => context.pushNamed('search_filters', extra: t),
-          icon: const Icon(Icons.tune), //tune  filter_list
-          label: const Text('Фильтры'),
-          heroTag: null,
-        ),
+        // floatingActionButton: FloatingActionButton.extended(
+        //   onPressed: () => context.pushNamed('search_filters', extra: t),
+        //   icon: const Icon(Icons.tune), //tune  filter_list
+        //   label: const Text('Фильтры'),
+        //   heroTag: null,
+        // ),
         appBar: AppBar(
           automaticallyImplyLeading: false,
           leading: IconButton(
@@ -66,7 +66,12 @@ class AnimeSearchPage extends ConsumerWidget {
                         controller.clearQuery();
                       },
                     )
-                  : null,
+                  : IconButton(
+                      tooltip: 'Фильтры',
+                      onPressed: () =>
+                          context.pushNamed('search_filters', extra: t),
+                      icon: const Icon(Icons.tune),
+                    ),
             ),
           ),
           bottom: AppBar(

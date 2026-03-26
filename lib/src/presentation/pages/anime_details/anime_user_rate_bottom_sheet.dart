@@ -822,6 +822,7 @@ class _AnimeUserRateBottomSheetState
                           aspectRatio: 1.0,
                           child: CachedImage(
                             '${AppConfig.staticUrl}${widget.data.image?.original}',
+                            // 'https://smarthard.net/static/animes/${widget.data.id}-placeholder.jpeg',
                             fit: BoxFit.cover,
                           ),
                         ),

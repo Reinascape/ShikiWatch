@@ -196,6 +196,8 @@ class LibraryPopUp extends ConsumerWidget {
                     ),
                     title: Text(
                       SecureStorageService.instance.userNickname,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

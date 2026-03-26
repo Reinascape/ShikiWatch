@@ -8,9 +8,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../utils/dynamic_colors.dart';
 import '../utils/router.dart';
 
+import 'widgets/shiki_annotate_region_widget.dart';
 import 'providers/settings_provider.dart';
 import 'widgets/app_theme_builder.dart';
-import 'widgets/shiki_annotate_region_widget.dart';
 
 //String appTitle = kDebugMode ? 'ShikiDev' : 'ShikiWatch';
 
@@ -35,44 +35,54 @@ class ShikiApp extends ConsumerWidget {
       dynamicDark: dynamicColors?.dark,
       colorSchemeVariant: colorSchemeVariant,
       isDynamic: useDynamicColors,
-      builder: (context, appTheme) => StyledOverlayRegion(
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          //showPerformanceOverlay: true,
-          //checkerboardOffscreenLayers: true,
-          //checkerboardRasterCacheImages: true,
-          theme: appTheme.light,
-          darkTheme: oledMode ? appTheme.oled : appTheme.dark,
-          title: kDebugMode ? 'ShikiDev' : 'ShikiWatch',
-          themeMode: themeMode,
-          routerConfig: router,
-          scrollBehavior: _AppScrollBehavior(),
-          builder: (context, child) {
-            if (!kDebugMode) {
-              ErrorWidget.builder = (FlutterErrorDetails error) {
-                return const Center(
-                  child: Text('Произошла ошибка'),
-                );
-              };
-            }
+      builder: (context, appTheme) => MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        //showPerformanceOverlay: true,
+        //checkerboardOffscreenLayers: true,
+        //checkerboardRasterCacheImages: true,
+        theme: appTheme.light,
+        darkTheme: oledMode ? appTheme.oled : appTheme.dark,
+        title: kDebugMode ? 'ShikiDev' : 'ShikiWatch',
+        themeMode: themeMode,
+        routerConfig: router,
+        scrollBehavior: _AppScrollBehavior(),
+        builder: (context, child) {
+          if (!kDebugMode) {
+            ErrorWidget.builder = (FlutterErrorDetails error) {
+              return const Center(
+                child: Text('Произошла ошибка'),
+              );
+            };
+          }
 
-            /// fix high textScaleFactor
-            final mediaQuery = MediaQuery.of(context);
+          /// fix high textScaleFactor
+          final mediaQuery = MediaQuery.of(context);
 
-            // final scale = mediaQuery.textScaler.clamp(
-            //   minScaleFactor: 0.8,
-            //   maxScaleFactor: 1.0,
-            // );
+          // final scale = mediaQuery.textScaler.clamp(
+          //   minScaleFactor: 0.8,
+          //   maxScaleFactor: 1.0,
+          // );
 
-            return MediaQuery(
-              data: mediaQuery.copyWith(
-                // textScaler: scale,
-                textScaler: const TextScaler.linear(1.05),
+          // return MediaQuery(
+          //   data: mediaQuery.copyWith(
+          //     // textScaler: scale,
+          //     textScaler: const TextScaler.linear(1.05),
+          //   ),
+          //   child: child!,
+          // );
+
+          return MediaQuery(
+            data: mediaQuery.copyWith(
+              // textScaler: scale,
+              textScaler: const TextScaler.linear(1.05),
+            ),
+            child: ExcludeSemantics(
+              child: StyledOverlayRegion(
+                child: child!,
               ),
-              child: child!,
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

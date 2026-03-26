@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../utils/extensions/buildcontext.dart';
 import '../../../../domain/models/pages_extra.dart';
@@ -49,7 +51,29 @@ class TitleRelated extends StatelessWidget {
                 const SizedBox(
                   width: 6.0,
                 ),
-                InkWell(
+                // InkWell(
+                //   onTap: () => Navigator.push(
+                //     context,
+                //     PageRouteBuilder(
+                //       pageBuilder: (context, animation1, animation2) =>
+                //           AnimeFranchisePage(
+                //         id: id,
+                //         name: name,
+                //       ),
+                //       transitionDuration: Duration.zero,
+                //       reverseTransitionDuration: Duration.zero,
+                //     ),
+                //   ),
+                //   child: Text(
+                //     'Хронология',
+                //     style: context.textTheme.bodyLarge!.copyWith(
+                //       fontWeight: FontWeight.w500,
+                //       color: context.colorScheme.onSurfaceVariant,
+                //     ),
+                //   ),
+                // ),
+                // Flexible
+                FranchiseChip(
                   onTap: () => Navigator.push(
                     context,
                     PageRouteBuilder(
@@ -62,13 +86,6 @@ class TitleRelated extends StatelessWidget {
                       reverseTransitionDuration: Duration.zero,
                     ),
                   ),
-                  child: Text(
-                    'Хронология',
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: context.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
                 ),
                 if (hasMore) ...[
                   const Spacer(),
@@ -79,6 +96,7 @@ class TitleRelated extends StatelessWidget {
                     ),
                     onPressed: () => TitleRelatedBottomSheet.show(
                       context,
+                      titleId: id,
                       related: related,
                     ),
                     icon: const Icon(
@@ -133,9 +151,59 @@ class TitleRelated extends StatelessWidget {
               aspectRatio: 1,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
-                child: CachedImage(
-                  item.title!.poster,
-                  memCacheWidth: 144,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedImage(
+                      item.title!.poster ?? 'missing',
+                      titleId: item.type == RelatedType.anime
+                          ? item.title!.id
+                          : null,
+                      memCacheWidth: 144,
+                    ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final statusAsync =
+                            ref.watch(relatedUserRateStatusProvider(id));
+
+                        final dot = statusAsync.whenOrNull(
+                          data: (data) {
+                            final status = data
+                                .firstWhereOrNull((e) =>
+                                    item.type == e.type &&
+                                    item.title?.id == e.id)
+                                ?.status;
+
+                            if (status == null) {
+                              return const SizedBox.shrink();
+                            }
+
+                            return Positioned(
+                              top: 4,
+                              left: 4,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: status.color(context.colorScheme),
+                                  shape: BoxShape.circle,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black54,
+                                      spreadRadius: 4,
+                                      blurRadius: 4,
+                                      offset: Offset(3, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: const SizedBox.square(dimension: 12),
+                              ),
+                            );
+                          },
+                        );
+
+                        return dot ?? const SizedBox.shrink();
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -157,6 +225,7 @@ class TitleRelated extends StatelessWidget {
               color: context.colorScheme.onSurfaceVariant,
             ),
           ),
+          // trailing: const Icon(Icons.chevron_right_rounded),
         );
       },
     );
@@ -164,9 +233,14 @@ class TitleRelated extends StatelessWidget {
 }
 
 class TitleRelatedBottomSheet extends StatelessWidget {
+  final int titleId;
   final List<GraphqlRelated> related;
 
-  const TitleRelatedBottomSheet(this.related, {super.key});
+  const TitleRelatedBottomSheet(
+    this.titleId,
+    this.related, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -239,9 +313,61 @@ class TitleRelatedBottomSheet extends StatelessWidget {
                         aspectRatio: 1,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: CachedImage(
-                            title.poster,
-                            memCacheWidth: 144,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              CachedImage(
+                                title.poster ?? 'missing',
+                                titleId: item.type == RelatedType.anime
+                                    ? title.id
+                                    : null,
+                                memCacheWidth: 144,
+                              ),
+                              Consumer(
+                                builder: (context, ref, child) {
+                                  final statusAsync = ref.watch(
+                                      relatedUserRateStatusProvider(titleId));
+
+                                  final dot = statusAsync.whenOrNull(
+                                    data: (data) {
+                                      final status = data
+                                          .firstWhereOrNull((e) =>
+                                              item.type == e.type &&
+                                              item.title?.id == e.id)
+                                          ?.status;
+
+                                      if (status == null) {
+                                        return const SizedBox.shrink();
+                                      }
+
+                                      return Positioned(
+                                        top: 4,
+                                        left: 4,
+                                        child: DecoratedBox(
+                                          decoration: BoxDecoration(
+                                            color: status
+                                                .color(context.colorScheme),
+                                            shape: BoxShape.circle,
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: Colors.black54,
+                                                spreadRadius: 4,
+                                                blurRadius: 4,
+                                                offset: Offset(3, 3),
+                                              ),
+                                            ],
+                                          ),
+                                          child: const SizedBox.square(
+                                              dimension: 12),
+                                        ),
+                                      );
+                                    },
+                                  );
+
+                                  return dot ?? const SizedBox.shrink();
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -274,7 +400,7 @@ class TitleRelatedBottomSheet extends StatelessWidget {
   }
 
   static void show(BuildContext context,
-      {required List<GraphqlRelated> related}) {
+      {required int titleId, required List<GraphqlRelated> related}) {
     showModalBottomSheet(
       context: context,
       useSafeArea: true,
@@ -283,7 +409,57 @@ class TitleRelatedBottomSheet extends StatelessWidget {
       showDragHandle: true,
       backgroundColor: context.colorScheme.background,
       elevation: 0,
-      builder: (_) => SafeArea(child: TitleRelatedBottomSheet(related)),
+      builder: (_) =>
+          SafeArea(child: TitleRelatedBottomSheet(titleId, related)),
+    );
+  }
+}
+
+class TitleRelatedItem extends StatelessWidget {
+  const TitleRelatedItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class FranchiseChip extends StatelessWidget {
+  const FranchiseChip({
+    super.key,
+    required this.onTap,
+  });
+
+  final Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: context.colorScheme.primaryContainer,
+      ),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 2,
+              horizontal: 6,
+            ),
+            child: Text(
+              'Хронология',
+              style: context.textTheme.bodySmall!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: context.colorScheme.onPrimaryContainer,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

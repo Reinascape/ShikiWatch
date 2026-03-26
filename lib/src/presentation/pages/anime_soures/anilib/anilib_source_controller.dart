@@ -41,9 +41,11 @@ final anilibSourceProvider = FutureProvider.family
     cancelToken: cancelToken,
   );
 
-  final title = search.firstWhereOrNull(
+  AnilibTitle? title = search.firstWhereOrNull(
     (e) => e.shikiId == extra.shikimoriId,
   );
+
+  title ??= search.firstOrNull;
 
   if (title == null) {
     return [];

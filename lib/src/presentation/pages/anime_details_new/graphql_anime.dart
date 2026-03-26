@@ -5,12 +5,107 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 
-import '../../../domain/models/graphql_user_rate.dart';
 import '../../../services/secure_storage/secure_storage_service.dart';
+import '../../../utils/extensions/riverpod_extensions.dart';
 import '../../../services/http/http_service_provider.dart';
+import '../../../domain/models/graphql_user_rate.dart';
 import '../../../domain/enums/shiki_gql.dart';
 
 import 'graphql_character.dart';
+
+class RelatedUserRateStatus {
+  final int id;
+  final RelatedType type;
+  final RateStatus? status;
+
+  RelatedUserRateStatus({
+    required this.id,
+    required this.type,
+    required this.status,
+  });
+
+  factory RelatedUserRateStatus.fromJson(Map<String, dynamic> json) {
+    RelatedType type = RelatedType.unknown;
+
+    if (json['anime'] != null) {
+      type = RelatedType.anime;
+    }
+
+    if (json['manga'] != null) {
+      type = RelatedType.manga;
+    }
+
+    final title = type == RelatedType.anime ? json['anime'] : json['manga'];
+    final statusJson = title['userRate']?['status'] as String?;
+
+    return RelatedUserRateStatus(
+      id: int.parse(title['id']),
+      type: type,
+      status: statusJson == null ? null : RateStatus.fromValue(statusJson),
+    );
+  }
+}
+
+final relatedUserRateStatusProvider =
+    FutureProvider.autoDispose.family<List<RelatedUserRateStatus>, int>(
+  (ref, id) async {
+    final cancelToken = ref.cancelToken();
+
+    ref.cacheFor(const Duration(seconds: 15));
+
+    const query = r'''
+    query($title_id: String) {
+      animes(ids: $title_id) {
+        related {
+          anime { id userRate { status } }
+          manga { id userRate { status } }
+        }
+      }
+    }
+  ''';
+
+    try {
+      final response = await ref.read(httpServiceProvider).post(
+            'graphql',
+            data: json.encode(
+              {
+                'query': query,
+                'variables': {
+                  'title_id': id.toString(),
+                },
+              },
+            ),
+            options: Options(
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization':
+                    'Bearer ${SecureStorageService.instance.token}',
+              },
+            ),
+            cancelToken: cancelToken,
+          );
+
+      if (response['errors'] != null) {
+        return [];
+      }
+
+      if (response['data']?['animes'] is! List<dynamic>) {
+        return [];
+      }
+
+      final list = response['data']['animes'] as List<dynamic>;
+
+      final List data = list.first['related'] ?? [];
+      return data.map((e) => RelatedUserRateStatus.fromJson(e)).toList();
+    } catch (_) {
+      return [];
+    }
+  },
+  name: 'relatedUserRateStatusProvider',
+);
+
+// ------------------------------------------------------------------------------------
 
 final animeDetailsProvider = AsyncNotifierProvider.autoDispose
     .family<DetailsNotifier, GraphqlAnime, int>(
@@ -269,7 +364,7 @@ class GraphqlAnime {
   final int id;
   final String name;
   final String url;
-  final Poster poster;
+  final Poster? poster;
   final GraphqlTopic? topic;
   final String? russian;
   final String? english;
@@ -347,7 +442,8 @@ class GraphqlAnime {
         id: int.parse(json["id"]),
         name: json["name"],
         url: json["url"],
-        poster: Poster.fromJson(json["poster"]),
+        // poster: Poster.fromJson(json["poster"]),
+        poster: json["poster"] == null ? null : Poster.fromJson(json["poster"]),
         topic:
             json["topic"] == null ? null : GraphqlTopic.fromJson(json["topic"]),
         russian: json["russian"],
@@ -617,7 +713,7 @@ class GraphqlRelatedTitle {
   final int id;
   final String name;
   final String? russian;
-  final String poster;
+  final String? poster;
   final TitleKind kind;
 
   GraphqlRelatedTitle({
@@ -633,7 +729,7 @@ class GraphqlRelatedTitle {
         id: int.parse(json["id"]),
         name: json["name"],
         russian: json["russian"],
-        poster: json["poster"]["mainUrl"],
+        poster: json["poster"]?["mainUrl"],
         kind: TitleKind.fromValue(json["kind"] ?? 'unknown'),
       );
 }

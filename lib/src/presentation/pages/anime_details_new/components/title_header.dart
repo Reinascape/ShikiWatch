@@ -27,13 +27,14 @@ class TitleHeader extends StatelessWidget {
       return Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-          Positioned.fill(
-            child: CachedNetworkImage(
-              imageUrl: title.poster.originalUrl ?? '',
-              fit: BoxFit.cover,
-              cacheManager: cacheManager,
+          if (title.poster?.originalUrl != null)
+            Positioned.fill(
+              child: CachedNetworkImage(
+                imageUrl: title.poster!.originalUrl!,
+                fit: BoxFit.cover,
+                cacheManager: cacheManager,
+              ),
             ),
-          ),
           Positioned.fill(
             top: -1,
             bottom: -1,
@@ -69,8 +70,9 @@ class TitleHeader extends StatelessWidget {
                   child: AspectRatio(
                     aspectRatio: 0.703,
                     child: CachedImage(
-                      title.poster.originalUrl ?? '',
+                      title.poster?.originalUrl ?? 'missing',
                       fit: BoxFit.cover,
+                      titleId: title.id,
                     ),
                   ),
                 ),
@@ -114,7 +116,12 @@ class TitleHeader extends StatelessWidget {
                 ),
               ],
             ),
-          ).animate().fade(),
+          ).animate().fade(duration: const Duration(milliseconds: 400)).slideY(
+                begin: 0.005,
+                end: 0,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
+              ),
         ],
       );
     }
@@ -123,7 +130,8 @@ class TitleHeader extends StatelessWidget {
       children: [
         Positioned.fill(
           child: CachedImage(
-            title.poster.originalUrl ?? '',
+            title.poster?.originalUrl ?? 'missing',
+            titleId: title.id,
             placeholder: (context, url) {
               return const SizedBox.shrink();
             },
@@ -172,7 +180,15 @@ class TitleHeader extends StatelessWidget {
                 ),
               ),
             ],
-          ).animate().fade(),
+          )
+              .animate()
+              .slideY(
+                begin: 0.025,
+                end: 0,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
+              )
+              .fade(),
         ),
       ],
     );

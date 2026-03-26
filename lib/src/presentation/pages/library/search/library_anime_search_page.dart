@@ -142,6 +142,9 @@ class LibraryAnimeSearchPage extends ConsumerWidget {
                 ),
               ],
             ),
+            SliverPadding(
+              padding: EdgeInsets.only(bottom: context.padding.bottom),
+            ),
           ],
         ),
       ),
